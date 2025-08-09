@@ -18,7 +18,11 @@
   },
   "author": "Aaron Dixon",
   "license": "ISC",
-  "description": "xelly.js",
+  "description": "xelly.js: A TypeScript library for creating games for xelly.games, the social microgames platform!",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xelly-games/xelly.js.git"
+  },
   "keywords": [
     "excalibur",
     "game-development",

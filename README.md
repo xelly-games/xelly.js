@@ -1,4 +1,4 @@
-This is the TypeScript Library for creating games for the [xelly.games](https://xelly.games) social game platform!
+This is the TypeScript Library for creating games for [xelly.games](https://xelly.games), the social microgames platform!
 
 ## Build
 
