@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "moduleResolution": "node", // resolve modules via node resolution (typical)
+    "module": "esnext", // resolve "import"-ed modules via esnext semantics
+    "target": "esnext", // compile *down to* esnext language features
+    "lib": ["esnext", "dom"], // what libs/features do we want availabe to our code; e.g. "dom" gets us HTMLCanvasElement
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "sourceMap": true
+  },
+  "include": ["src/**/*"]
+}

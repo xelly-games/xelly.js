@@ -1,0 +1,36 @@
+{
+  "name": "@xelly/xelly.js",
+  "version": "1.0.0",
+  "type": "module",
+  "//": "main is outdated; exports is where its at",
+  "exports": {
+    "import": "./dist/index.js"
+  },
+  "types": "./dist/index.d.ts",
+  "//": "which \"files\" are published to npm",
+  "files": [
+    "./dist/"
+  ],
+  "scripts": {
+    "clean": "rm -rf dist tsconfig.tsbuildinfo && echo 'cleaned!'",
+    "build": "tsc --build",
+    "watch": "tsc --build --watch"
+  },
+  "author": "Aaron Dixon",
+  "license": "ISC",
+  "description": "xelly.js",
+  "keywords": [
+    "excalibur",
+    "game-development",
+    "typescript",
+    "gamedev",
+    "game-engine",
+    "utilities"
+  ],
+  "peerDependencies": {
+    "excalibur": "~0.30.3"
+  },
+  "devDependencies": {
+    "typescript": "~5.7.3"
+  }
+}
