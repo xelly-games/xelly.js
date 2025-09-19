@@ -1,6 +1,11 @@
+import {Color} from 'excalibur';
 import font from './font';
 import font2 from './font2';
 import {sprites} from './sprites';
+
+const toLegacySprite = (sprite: [number, number, any?][]): [number, number][] => {
+    return sprite.map(([x, y]) => [x, y]);
+};
 
 export type LabelOptions = {
     readonly font?: 'default' | 'font2',
@@ -25,9 +30,9 @@ const createLabelSprite = (label: string, options: LabelOptions = {}): [number, 
             accs.push([]);
             ++currAccIdx;
         } else {
-            const sprite = useFont[ch] || font[ch] || useFont['?'] || font['?'];
+            const sprite: [number, number][] = useFont[ch] || font[ch] || useFont['?'] || font['?'];
             const shifted = sprites.xshift(sprite, x_);
-            accs[currAccIdx] = accs[currAccIdx].concat(shifted);
+            accs[currAccIdx] = accs[currAccIdx].concat(toLegacySprite(shifted));
             x_ += sprites.width(sprite) + resolvedOptions.xspacing!;
         }
     }
@@ -42,9 +47,9 @@ const createLabelSprite = (label: string, options: LabelOptions = {}): [number, 
         const h = sprites.height(acc);
         const adjustedAcc = sprites.yshift(acc, y_);
         if (w < maxWidth) {
-            retval.push(...sprites.xshift(adjustedAcc, Math.floor((maxWidth - w) / 2)));
+            retval.push(...toLegacySprite(sprites.xshift(adjustedAcc, Math.floor((maxWidth - w) / 2))));
         } else {
-            retval.push(...adjustedAcc);
+            retval.push(...toLegacySprite(adjustedAcc));
         }
         y_ += h + resolvedOptions.yspacing!;
     }
@@ -63,7 +68,7 @@ const createLineSprite = (x1: number, y1: number, x2: number, y2: number) => {
     const sy = y1 < y2 ? 1 : -1;
     let err = dx - dy;
 
-    const result: [number, number][] = []
+    const result: [number, number][] = [];
     while (true) {
         result.push([x1, y1]);
 
@@ -85,7 +90,7 @@ const createLineSprite = (x1: number, y1: number, x2: number, y2: number) => {
     return result;
 }
 
-const createRectSprite = (x: number, y: number, w: number, h: number)=> {
+const createRectSprite = (x: number, y: number, w: number, h: number) => {
     const acc: [number, number][] = [];
     for (let i = 0; i < h; ++i) {
         acc.push(...createLineSprite(x, y + i, w - 1, y + i));
@@ -131,10 +136,46 @@ const createCircleSprite = (x: number, y: number, r: number) => {
     return sprites.yshift(sprites.xshift(acc, r), r);
 };
 
+// --
+
+const chToIndex = (ch: string) => {
+    if (ch >= '0' && ch <= '9') {
+        return parseInt(ch);
+    } else if (ch >= 'A' && ch <= 'Z') {
+        return ch.charCodeAt(0) - 'A'.charCodeAt(0) + 10;
+    } else if (ch >= 'a' && ch <= 'z') {
+        return ch.charCodeAt(0) - 'a'.charCodeAt(0) + 37;
+    } else {
+        return -1;
+    }
+};
+
+const createFromAscii = (ascii: string, palette?: Color[]): [number, number, Color?][] => {
+    const retval: [number, number, Color?][] = [];
+    const rows = ascii.trim().split("\n").map(l => l.trim());
+    const h = rows.length;
+    const w = Math.max(...rows.map(r => r.length));
+    for (let y = 0; y < h; y++) {
+        const row = rows[y];
+        for (let x = 0; x < row.length; x++) {
+            const ch = row[x] ?? '.';
+            if (ch != '.') {
+                const idx = chToIndex(ch);
+                const useColor = palette
+                    ? (idx >= 0 && idx < palette.length) ? palette[idx] : undefined
+                    : undefined;
+                retval.push(useColor? [x, y, useColor] : [x, y]);
+            }
+        }
+    }
+    return retval;
+};
+
 export const create = {
     line: createLineSprite,
     label: createLabelSprite,
     circle: createCircleSprite,
     rect: createOpenRectSprite,
-    filledRect: createRectSprite
+    filledRect: createRectSprite,
+    ascii: createFromAscii,
 };

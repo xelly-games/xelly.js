@@ -4,6 +4,7 @@ import {convert} from './convert';
 import {sprites} from './sprites';
 import {colliders} from './colliders';
 
+/** @deprecated */
 const fromPixelBasedArgs = <T extends Partial<ActorArgs>>(context: XellyContext, args: T): T => {
     const {x, y, pos, width, height, radius, vel, acc, offset} = args;
     return {...args,
@@ -19,15 +20,18 @@ const fromPixelBasedArgs = <T extends Partial<ActorArgs>>(context: XellyContext,
     };
 };
 
+/** @deprecated */
 export type FromSpriteOptions = {
     readonly generatePolygonCollider?: boolean
 };
 
+/** @deprecated */
 export type ActorArgsFromSprite = {width?: number, height?: number} | {collider?: Collider};
 
+/** @deprecated */
 const fromSprite = (context: XellyContext, sprite: [number, number][], options?: FromSpriteOptions): ActorArgsFromSprite => {
     if (options?.generatePolygonCollider === true) {
-        const generated = colliders.generate(context, sprite);
+        const generated = colliders.legacyGenerate(context, sprite);
         if (generated) {
             return {collider: generated};
         } else {
@@ -40,6 +44,7 @@ const fromSprite = (context: XellyContext, sprite: [number, number][], options?:
     });
 };
 
+/** @deprecated */
 export const actorArgs = {
     fromPixelBasedArgs,
     fromSprite

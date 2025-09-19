@@ -4,8 +4,7 @@ import {FromSpriteOptions, actorArgs} from './actorArgs';
 import {ActorArgsSansColliderArgs} from './actors';
 import {GraphicOptions, graphics} from './graphics';
 
-/** Useful for games that want to extend custom classes from Actor (instead of using
- * fromSprite utilities directly. */
+/** @deprecated */
 export class XellySpriteActor extends Actor {
 
     readonly context: XellyContext;

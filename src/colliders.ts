@@ -1,10 +1,11 @@
-import {Collider, LineSegment, Shape, vec, Vector} from 'excalibur';
+import {Collider, Color, LineSegment, Shape, vec, Vector} from 'excalibur';
 import {XellyContext} from './XellyContext';
-import {convert} from './convert';
-import {sprites} from './sprites';
+import {convert, type PixelMetrics} from './internal/convert';
+import {measure} from './measure';
+import {XellyPixelScheme} from './XellyPixelScheme';
 
-const generate = (context: XellyContext, sprite: [number, number][]): Collider | undefined => {
-    const [w, h] = [sprites.width(sprite), sprites.height(sprite)];
+const internalGenerate = (context: PixelMetrics, sprite: [number, number, Color?][]): Collider | undefined => {
+    const [w, h] = [measure.width(sprite), measure.height(sprite)];
     const matrix: number[][] = Array.from({ length: h }, () => Array(w).fill(0));
 
     sprite.forEach(([x, y]) => matrix[y][x] = 1);
@@ -68,4 +69,13 @@ const generate = (context: XellyContext, sprite: [number, number][]): Collider |
     return shape.triangulate();
 };
 
-export const colliders = {generate};
+const generate = (pixelScheme: XellyPixelScheme, sprite: [number, number, Color?][]): Collider | undefined => {
+    return internalGenerate(convert.toPixelMetrics(pixelScheme), sprite);
+}
+
+/** @deprecated */
+const legacyGenerate = (context: XellyContext, sprite: [number, number][]): Collider | undefined => {
+    return internalGenerate(context.onePixel, sprite);
+};
+
+export const colliders = {generate, legacyGenerate};

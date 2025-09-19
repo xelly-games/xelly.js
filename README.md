@@ -3,5 +3,13 @@ This is the TypeScript Library for creating games for [xelly.games](https://xell
 ## Build
 
 ```
-tsc --build
+$ tsc --build
+```
+
+## Release
+
+```
+$ npm login
+$ npm publish --access public
+$ (bump "version" in package.json)
 ```
