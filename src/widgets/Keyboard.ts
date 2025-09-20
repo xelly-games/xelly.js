@@ -10,10 +10,14 @@ import {
     Vector
 } from 'excalibur';
 import {XellyContext} from '../XellyContext';
+import {XellyPixelScheme} from '../XellyPixelScheme';
+import {convert} from '../internal/convert';
 import {actors} from '../actors';
 import {graphics} from '../graphics';
 import {measure} from '../measure';
-import {convert} from '../convert';
+
+const PixelScheme = XellyPixelScheme.Px3_0;
+const PixelMetrics = convert.toPixelMetrics(PixelScheme);
 
 const DeleteKeySprite: [number, number][] = [
     [0, 3],
@@ -133,8 +137,8 @@ export class Keyboard extends Actor {
         const keyWidth = (maxKeyboardWidth - cols * keyboardKeyMargin) / cols;
         const keyHeight = keyboardHeightOverWidth * keyWidth;
 
-        const minimizerWidth = convert.toCssScale(this.context, measure.width(MinimizerSprite));
-        const minimizerHeight = convert.toCssScale(this.context, measure.height(MinimizerSprite));
+        const minimizerWidth = convert.toCssScale(PixelMetrics, measure.width(MinimizerSprite));
+        const minimizerHeight = convert.toCssScale(PixelMetrics, measure.height(MinimizerSprite));
         // NOTE: headroom gives more but invisible "clickable"/"touchable" area for user minimize/maximize
         const minimizerInvisibleMargins = this.options.minimizerInvisibleMargins!;
         if (this.options.minimizer) {
@@ -145,7 +149,7 @@ export class Keyboard extends Actor {
             const minimize = new GraphicsGroup({
                 members: [
                     {
-                        graphic: graphics.fromSprite(this.context, MinimizerSprite),
+                        graphic: graphics.fromSpriteArray(MinimizerSprite, {pixelScheme: PixelScheme}),
                         offset:
                             vec(minimizerInvisibleMargins.x, minimizerInvisibleMargins.y)
                     }]
@@ -153,7 +157,7 @@ export class Keyboard extends Actor {
             const maximize = new GraphicsGroup({
                 members: [
                     {
-                        graphic: graphics.fromSprite(this.context, MaximizerSprite),
+                        graphic: graphics.fromSpriteArray(MaximizerSprite, {pixelScheme: PixelScheme}),
                         offset:
                             vec(minimizerInvisibleMargins.x, minimizerInvisibleMargins.y)
                     }]
@@ -246,23 +250,23 @@ export class Keyboard extends Actor {
         theKey.graphics.use(createOpenRect(this.context.color.fg, keyWidth, keyHeight));
         theKey.graphics.add('negative', createFilledRect(this.context.color.fg, keyWidth, keyHeight));
         if (text === 'DEL') {
-            const label = actors.fromSprite(this.context, DeleteKeySprite, {}, {name: 'theKeyLabel'});
+            const label = actors.fromSpriteArray(DeleteKeySprite, {name: 'theKeyLabel', color: this.context.color.fg});
             label.graphics.add('negative',
-                graphics.fromSprite(this.context, DeleteKeySprite, {fgColor: 'negative'}));
+                graphics.fromSpriteArray(DeleteKeySprite, {color: Color.White}));
             label.anchor = Vector.Half;
             label.pos = vec(keyWidth / 2, keyHeight / 2);
             theKey.addChild(label);
         } else if (text === 'ENTER') {
-            const label = actors.fromSprite(this.context, EnterKeySprite, {}, {name: 'theKeyLabel'});
+            const label = actors.fromSpriteArray(EnterKeySprite, {name: 'theKeyLabel', color: this.context.color.fg});
             label.graphics.add('negative',
-                graphics.fromSprite(this.context, EnterKeySprite, {fgColor: 'negative'}));
+                graphics.fromSpriteArray(EnterKeySprite, {color: Color.White}));
             label.anchor = Vector.Half;
             label.pos = vec(keyWidth / 2, keyHeight / 2);
             theKey.addChild(label);
         } else {
-            const label = actors.fromText(this.context, text, {}, {name: 'theKeyLabel'});
+            const label = actors.fromText(text, {name: 'theKeyLabel', color: this.context.color.fg});
             label.graphics.add('negative',
-                graphics.fromText(this.context, text, {fgColor: 'negative'}));
+                graphics.fromText(text, {color: Color.White}));
             label.anchor = Vector.Half;
             label.pos = vec(keyWidth / 2, keyHeight / 2);
             theKey.addChild(label);

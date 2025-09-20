@@ -1,29 +1,26 @@
-import {Actor, ActorArgs} from 'excalibur';
-import {actorArgs, FromSpriteOptions} from './actorArgs';
 import {GraphicOptions, graphics} from './graphics';
-import {XellyContext} from './XellyContext';
-import {create, LabelOptions} from './create';
+import {LabelOptions, create} from './create';
+import {Actor, ActorArgs, Color} from 'excalibur';
 
-/** @deprecated */
-export type ActorArgsSansColliderArgs = Omit<ActorArgs, 'width' | 'height' | 'radius' | 'collider'>;
-
-/** @deprecated */
-const fromSprite
-    = (context: XellyContext, sprite: [number, number][], options?: GraphicOptions & FromSpriteOptions, moreArgs?: ActorArgsSansColliderArgs): Actor => {
-    const actor = new Actor({
-        ...actorArgs.fromSprite(context, sprite, options),
-        ...moreArgs
-    });
-    const graphic = graphics.fromSprite(context, sprite, options);
+const fromSpriteArray = (sprite: [number, number, Color?][], options?: ActorArgs & GraphicOptions): Actor => {
+    const actor = new Actor(options);
+    const graphic = graphics.fromSpriteArray(sprite, options);
     actor.graphics.use(graphic);
     return actor;
 };
 
-/** @deprecated */
-const fromText
-    = (context: XellyContext, text: string, options?: GraphicOptions & FromSpriteOptions & LabelOptions, moreArgs?: ActorArgs) => {
-    return fromSprite(context, create.label(text, options), options, moreArgs);
+const fromText = (label: string, options?: ActorArgs & GraphicOptions & LabelOptions): Actor => {
+    const actor = new Actor(options);
+    const graphic = graphics.fromText(label, options);
+    actor.graphics.use(graphic);
+    return actor;
 };
 
-/** @deprecated */
-export const actors = {fromSprite, fromText};
+const fromAscii = (ascii: string, palette?: Color[], options?: ActorArgs & GraphicOptions): Actor => {
+    const actor = new Actor(options);
+    const graphic = graphics.fromAscii(ascii, palette, options);
+    actor.graphics.use(graphic);
+    return actor;
+};
+
+export const actors = {fromSpriteArray, fromText, fromAscii};

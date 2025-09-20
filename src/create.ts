@@ -1,7 +1,8 @@
 import {Color} from 'excalibur';
 import font from './font';
 import font2 from './font2';
-import {sprites} from './sprites';
+import {measure} from './measure';
+import {shift} from './shift';
 
 const toLegacySprite = (sprite: [number, number, any?][]): [number, number][] => {
     return sprite.map(([x, y]) => [x, y]);
@@ -31,9 +32,9 @@ const createLabelSprite = (label: string, options: LabelOptions = {}): [number, 
             ++currAccIdx;
         } else {
             const sprite: [number, number][] = useFont[ch] || font[ch] || useFont['?'] || font['?'];
-            const shifted = sprites.xshift(sprite, x_);
+            const shifted = shift.x(sprite, x_);
             accs[currAccIdx] = accs[currAccIdx].concat(toLegacySprite(shifted));
-            x_ += sprites.width(sprite) + resolvedOptions.xspacing!;
+            x_ += measure.width(sprite) + resolvedOptions.xspacing!;
         }
     }
 
@@ -43,11 +44,11 @@ const createLabelSprite = (label: string, options: LabelOptions = {}): [number, 
     let y_ = 0;
     let retval: [number, number][] = [];
     for (const acc of accs) {
-        const w = sprites.width(acc);
-        const h = sprites.height(acc);
-        const adjustedAcc = sprites.yshift(acc, y_);
+        const w = measure.width(acc);
+        const h = measure.height(acc);
+        const adjustedAcc = shift.y(acc, y_);
         if (w < maxWidth) {
-            retval.push(...toLegacySprite(sprites.xshift(adjustedAcc, Math.floor((maxWidth - w) / 2))));
+            retval.push(...toLegacySprite(shift.x(adjustedAcc, Math.floor((maxWidth - w) / 2))));
         } else {
             retval.push(...toLegacySprite(adjustedAcc));
         }
@@ -133,7 +134,7 @@ const createCircleSprite = (x: number, y: number, r: number) => {
             acc.push([x1, y1]);
         }
     }
-    return sprites.yshift(sprites.xshift(acc, r), r);
+    return shift.y(shift.x(acc, r), r);
 };
 
 // --
