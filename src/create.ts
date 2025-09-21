@@ -153,23 +153,27 @@ const chToIndex = (ch: string) => {
 
 const createFromAscii = (ascii: string, palette?: Color[]): [number, number, Color?][] => {
     const retval: [number, number, Color?][] = [];
-    const rows = ascii.trim().split("\n").map(l => l.trim());
-    const h = rows.length;
-    const w = Math.max(...rows.map(r => r.length));
-    for (let y = 0; y < h; y++) {
+    const rows = ascii.split("\n");
+    const maxHeight = rows.length;
+    const maxWidth = Math.max(...rows.map(r => r.length));
+    let minX = maxWidth;
+    let minY = maxHeight;
+    for (let y = 0; y < maxHeight; y++) {
         const row = rows[y];
         for (let x = 0; x < row.length; x++) {
-            const ch = row[x] ?? '.';
-            if (ch != '.') {
+            const ch = row[x] ?? ' ';
+            if (ch != ' ') {
                 const idx = chToIndex(ch);
                 const useColor = palette
                     ? (idx >= 0 && idx < palette.length) ? palette[idx] : undefined
                     : undefined;
                 retval.push(useColor? [x, y, useColor] : [x, y]);
+                minX = Math.min(minX, x);
+                minY = Math.min(minY, y);
             }
         }
     }
-    return retval;
+    return shift.y(shift.x(retval, -minX), -minY);
 };
 
 export const create = {
