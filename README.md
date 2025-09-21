@@ -9,6 +9,7 @@ $ tsc --build
 ## Release
 
 ```
+$ make build
 $ npm login
 $ npm publish --access public
 $ (bump "version" in package.json)
