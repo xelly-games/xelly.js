@@ -148,7 +148,7 @@ const fromSpriteArray = (sprite: [number, number, Color?][], options?: GraphicOp
 };
 
 const fromText = (label: string, options?: GraphicOptions & LabelOptions): Graphic => {
-    return fromSpriteArray(create.label(label), options);
+    return fromSpriteArray(create.label(label, options), options);
 };
 
 const fromAscii = (ascii: string, palette?: Color[], options?: GraphicOptions): Graphic => {
