@@ -17,7 +17,7 @@ type GraphicOptions = {
     readonly pixelScheme?: XellyPixelScheme, // see DefaultPixelMetrics
     readonly cssWidthAndHeightOverride?: Vector | ((cssWidthAndHeight: Vector) => Vector),
     readonly anchor?: Vector, // default is Vector.Half
-    readonly cssPosition?: Vector, // default is Vector.Half
+    readonly cssPosition?: Vector, // default is centered
     readonly borderColor?: Color,
     readonly borderWidth?: number,
     readonly borderRadius?: number,
