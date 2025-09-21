@@ -1,6 +1,6 @@
 {
   "name": "@xelly/xelly.js",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "type": "module",
   "//": "main is outdated; exports is where its at",
   "exports": {
