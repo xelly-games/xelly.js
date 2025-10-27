@@ -14,4 +14,8 @@ export type XellyContext = {
     }
 
     readonly parameters?: XellyContextParameters
+
+    readonly deps?: {
+        [key: string ]: object
+    };
 };

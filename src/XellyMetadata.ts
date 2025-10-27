@@ -1,5 +1,6 @@
 import {XellyGameType} from './XellyGameType';
 
 export type XellyMetadata = {
-    type: XellyGameType
+    type: XellyGameType,
+    deps?: string[]
 };
